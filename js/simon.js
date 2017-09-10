@@ -1,5 +1,9 @@
 var KEYS = ['c', 'd', 'e', 'f'];
 var NOTE_DURATION = 1000;
+var timer;
+var WAIT_TIME = 2500;
+var recording = [];
+var enabled = true;
 
 // NoteBox
 //
@@ -14,13 +18,15 @@ function NoteBox(key, onClick) {
 
 	// When enabled, will call this.play() and this.onClick() when clicked.
 	// Otherwise, clicking has no effect.
-	var enabled = true;
+	// var enabled = true;
 	// Counter of how many play calls have been made without completing.
 	// Ensures that consequent plays won't prematurely remove the active class.
 	var playing = 0;
 
 	this.key = key;
-	this.onClick = onClick || function () {};
+	this.onClick = onClick || function () {
+		recording.push(this.key);
+	};
 
 	// Plays the audio associated with this NoteBox
 	this.play = function () {
@@ -39,22 +45,13 @@ function NoteBox(key, onClick) {
 		}, NOTE_DURATION)
 	}
 
-	// Enable this NoteBox
-	this.enable = function () {
-		enabled = true;
-	}
-
-	// Disable this NoteBox
-	this.disable = function () {
-		enabled = false;
-	}
-
 	// Call this NoteBox's clickHandler and play the note.
 	this.clickHandler = function () {
 		if (!enabled) return;
-
+		clearTimeout(timer);
 		this.onClick(this.key)
 		this.play()
+		timer = setTimeout(playBack, WAIT_TIME);
 	}.bind(this)
 
 	boxEl.addEventListener('mousedown', this.clickHandler);
@@ -71,6 +68,13 @@ KEYS.forEach(function (key) {
 	notes[key] = new NoteBox(key);
 });
 
-KEYS.concat(KEYS.slice().reverse()).forEach(function(key, i) {
-	setTimeout(notes[key].play.bind(null, key), i * NOTE_DURATION);
-});
+var playBack = function(){
+	enabled = false;
+	if (recording.length == 0) {
+		enabled = true;
+		return;
+	}
+	notes[recording[0]].play();
+	recording.shift();
+	setTimeout(playBack, NOTE_DURATION);
+}
