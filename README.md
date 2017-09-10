@@ -41,3 +41,4 @@ There is no need to replicate the look of the original (although you can if you 
 Fork this repository into your personal GitHub account and do your work there, then link to your version in the application form. When you are finished, we should be able to clone your repository and see your work by running an HTTP server in the root project folder.
 
 Create a file called `NOTES.md` and note any significant difficulties you had while completing the tasks, anything you would like to explain about your code, how you approached and solved the problem, or what resources you used. Think of this as analogous to explaining your code during an in-person interview coding question. You can write as little or as much as you want. Good luck :)
+# ubcLaunchPadSimon
